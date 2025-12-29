@@ -1,0 +1,615 @@
+/* ================= GLOBAL ================= */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #fff;
+    color: #333;
+}
+
+/* ================= NAVBAR MEJORADA ================= */
+/* ================= NAVBAR SIMPLIFICADA ================= */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #000;
+    z-index: 9999;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(0, 200, 83, 0.2);
+    height: 70px;
+}
+
+.navbar.scrolled {
+    background: rgba(0, 0, 0, 0.95);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Brand/Logo */
+.navbar-brand {
+    flex-shrink: 0;
+}
+
+.brand-link {
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.brand-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #00c853;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.brand-link:hover .brand-text {
+    color: #00e676;
+    transform: translateY(-1px);
+}
+
+/* Menú de navegación */
+.navbar-menu {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 40px;
+}
+
+.nav-links li {
+    position: relative;
+}
+
+.nav-links a {
+    font-family: 'Montserrat', sans-serif;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 8px 0;
+    position: relative;
+    transition: all 0.3s ease;
+    opacity: 0.9;
+}
+
+.nav-links a:hover {
+    color: #00c853;
+    opacity: 1;
+}
+
+/* Enlace activo */
+.nav-links a.activo {
+    color: #00c853;
+    opacity: 1;
+    font-weight: 600;
+}
+
+.nav-links a.activo::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #00c853;
+    border-radius: 2px;
+    animation: slideIn 0.4s ease forwards;
+}
+
+@keyframes slideIn {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* Botón CTA */
+.navbar-actions {
+    flex-shrink: 0;
+}
+
+.btn-nav {
+    background: #00c853;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.btn-nav:hover {
+    background: #00a042;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 200, 83, 0.2);
+}
+
+/* Botón menú móvil */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    z-index: 10000;
+    padding: 0;
+}
+
+.menu-icon {
+    display: block;
+    width: 25px;
+    height: 2px;
+    background: #fff;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.menu-icon::before,
+.menu-icon::after {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 2px;
+    background: #fff;
+    left: 0;
+    transition: all 0.3s ease;
+}
+
+.menu-icon::before {
+    top: -8px;
+}
+
+.menu-icon::after {
+    bottom: -8px;
+}
+
+.menu-toggle.active .menu-icon {
+    background: transparent;
+}
+
+.menu-toggle.active .menu-icon::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.menu-toggle.active .menu-icon::after {
+    transform: rotate(-45deg);
+    bottom: 0;
+}
+
+/* Menú móvil */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 300px;
+    height: 100vh;
+    background: #000;
+    z-index: 9998;
+    transition: right 0.4s ease;
+    padding: 30px;
+    overflow-y: auto;
+    border-left: 1px solid rgba(0, 200, 83, 0.2);
+}
+
+.mobile-menu.active {
+    right: 0;
+}
+
+.mobile-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #00c853;
+    letter-spacing: 1px;
+}
+
+.mobile-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.mobile-close:hover {
+    color: #00c853;
+}
+
+.mobile-links {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 40px 0;
+}
+
+.mobile-links li {
+    margin-bottom: 15px;
+}
+
+.mobile-links a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #fff;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    padding: 15px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.mobile-links a:hover,
+.mobile-links a.activo {
+    background: rgba(0, 200, 83, 0.1);
+    color: #00c853;
+}
+
+.mobile-links i {
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+}
+
+.mobile-actions {
+    margin-top: 30px;
+}
+
+.btn-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #00c853;
+    color: white;
+    padding: 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.btn-mobile:hover {
+    background: #00a042;
+    transform: translateY(-2px);
+}
+
+/* Overlay para móvil */
+.mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9997;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+
+.mobile-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 992px) {
+    .navbar-menu {
+        display: none;
+    }
+    
+    .navbar-actions {
+        display: none;
+    }
+    
+    .menu-toggle {
+        display: block;
+    }
+    
+    .navbar-container {
+        padding: 0 15px;
+    }
+    
+    .brand-text {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mobile-menu {
+        width: 100%;
+        padding: 20px;
+    }
+    
+    .brand-text {
+        font-size: 1.3rem;
+    }
+    
+    .navbar {
+        height: 65px;
+    }
+}
+/* Ajuste del padding para evitar que el contenido quede bajo la navbar */
+main {
+    padding: 100px 0 60px; /* Ya está bien, pero aseguramos 100px */
+}
+
+/* ================= RESPONSIVE MEJORADO ================= */
+@media (max-width: 768px) {
+    .navbar {
+        height: auto;
+        padding: 18px 20px; /* ↑ Aumentado padding */
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .navbar a {
+        font-size: 1.2rem; /* ↑ Más grande en móviles */
+        padding: 10px 0;
+    }
+
+    .navbar ul {
+        width: 100%;
+        flex-direction: column;
+        gap: 18px; /* ↑ Aumentado gap */
+        margin-top: 18px;
+        display: none;
+        align-items: center;
+    }
+
+    .navbar ul.active {
+        display: flex;
+    }
+
+    main {
+        padding: 110px 0 50px; /* ↑ Ajustado para móviles */
+    }
+}
+
+/* ================= MAIN ================= */
+main {
+    padding: 100px 0 60px; /* margen superior para navbar, sin padding lateral */
+}
+
+/* ================= BOTÓN ================= */
+.btn {
+    background: #00c853;
+    color: white;
+    padding: 14px 30px;
+    /* Eliminado border-radius para estilo minimalista */
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    border: none; /* sin borde */
+    cursor: pointer;
+    transition: background-color 0.25s;
+}
+
+.btn:hover {
+    background: #00a042; /* solo cambio de color */
+}
+
+/* ================= FOOTER ================= */
+.footer {
+    background: linear-gradient(135deg, #0a0a0a, #030303);
+    color: #ccc;
+    padding-top: 3rem;
+    margin-top: 3rem;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2.2rem;
+}
+
+.footer-logo {
+    max-width: 160px;
+    margin-bottom: 1.2rem;
+}
+
+.footer-col h4 {
+    color: white;
+    margin-bottom: 1.2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 0.65rem;
+}
+
+.footer-col a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.footer-col a:hover {
+    color: #00c853;
+}
+
+.footer-col p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0.4rem 0;
+}
+
+.footer-col a[href*="maps."] i,
+.footer-col a[href*="goo.gl"] i {
+    margin-right: 6px;
+    color: #00c853;
+}
+
+.footer-col a[href^="tel"],
+.footer-col a[href^="mailto"] {
+    color: #ccc;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.social-icons a {
+    display: inline-block;
+    color: white;
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+
+.social-icons a:hover {
+    color: #00c853;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 1.2rem 25px;
+    background: #000;
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-top: 2.5rem;
+    border-top: 1px solid #222;
+}
+
+/* ================= WHATSAPP ================= */
+.whatsapp-float {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 9999;
+    width: 60px;
+    height: 60px;
+}
+
+.whatsapp-float img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Eliminada la animación de hover para mantener estilo minimalista */
+/* .whatsapp-float:hover { transform: scale(1.05); } */
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .navbar {
+        height: auto;
+        padding: 15px 20px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .navbar-content {
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        align-items: center;
+    }
+
+    .menu-btn {
+        display: block;
+        position: static;
+        margin-top: 15px;
+    }
+
+    .navbar ul {
+        width: 100%;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 15px;
+        display: none;
+        align-items: center;
+    }
+
+    .navbar ul.active {
+        display: flex;
+    }
+
+    main {
+        padding: 90px 0 40px;
+    }
+
+    .footer-container {
+        text-align: center;
+    }
+
+    .whatsapp-float {
+        width: 52px;
+        height: 52px;
+        bottom: 20px;
+        right: 20px;
+    }
+}
