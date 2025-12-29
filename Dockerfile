@@ -1,40 +1,47 @@
-FROM php:8.2-apache
+FROM php:8.2-fpm-alpine
 
-# Instalar dependencias del sistema
-RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libzip-dev \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
+# 1. Instalar dependencias del sistema PRIMERO
+RUN apk update && apk add --no-cache \
+    nginx \
+    supervisor \
     curl \
-    && docker-php-ext-install pdo pdo_mysql zip
+    git \
+    zip \
+    unzip \
+    libpng-dev \
+    libzip-dev \
+    postgresql-dev \
+    && rm -rf /var/cache/apk/*
 
-# Habilitar mod_rewrite
-RUN a2enmod rewrite
+# 2. Instalar extensiones PHP necesarias
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql gd zip
 
-# Instalar Composer
+# 3. Instalar Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Directorio de trabajo
+# 4. Establecer directorio de trabajo
 WORKDIR /var/www/html
 
-# Copiar archivos
+# 5. Copiar solo los archivos necesarios primero (mejora caché de Docker)
+COPY composer.json composer.lock ./
+
+# 6. Instalar dependencias SIN scripts (evita problemas)
+RUN composer install --no-interaction --no-dev --optimize-autoloader --no-scripts
+
+# 7. Copiar el resto de la aplicación
 COPY . .
 
-# Permisos
-RUN chown -R www-data:www-data storage bootstrap/cache
+# 8. Establecer permisos para Laravel
+RUN chown -R www-data:www-data /var/www/html/storage \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache
 
-# Instalar dependencias PHP
-RUN composer install --no-dev --optimize-autoloader
+# 9. Copiar configuraciones
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Exponer puerto 80
+# 10. Exponer puerto
 EXPOSE 80
 
-# Apache apunta a /public
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf
-
-CMD ["apache2-foreground"]
+# 11. Comando de inicio
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
